@@ -25,7 +25,8 @@ yarn.lock
 package-lock.json
 
 # env
-.env.local
+.env.*
+!.env.sample
 
 # vercel
 .vercel
