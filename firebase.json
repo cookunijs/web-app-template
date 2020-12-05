@@ -26,7 +26,7 @@
     "indexes": "packages/backend/firestore/firestore.indexes.json"
   },
   "storage": {
-    "rules": "storage.rules"
+    "rules": "packages/backend/storage/storage.rules"
   },
   "region": "asia-northeast1",
   "environment": {
