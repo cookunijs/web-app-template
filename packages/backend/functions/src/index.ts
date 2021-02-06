@@ -1,22 +1,26 @@
+import * as fs from "fs";
+import * as path from "path";
+
 import * as admin from "firebase-admin";
 admin.initializeApp();
+interface Functions {
+  [key: string]: string;
+}
 
-// const db = admin.firestore()
-// db.settings({ host: 'localhost:8080', ssl: false })//TODO function deploy時に不要
+const endpoints = "controllers";
+const functions: Functions = {};
+const files = fs.readdirSync(path.join(__dirname, endpoints));
 
-const funcs = {
-  sample: "./endpoints/sample/sample",
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const loadFunctions = (funcsObj: any) => {
-  console.log("loadFunctions " + process.env.FUNCTION_NAME);
-  for (const name in funcsObj) {
-    if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === name) {
-      exports[name] = require(funcsObj[name]);
-    }
+for (const file of files) {
+  const fileNameArray = file.split(".");
+  if (fileNameArray.length > 1) {
+    const fileName = fileNameArray[0];
+    functions[fileName] = `./${endpoints}/${fileName}`;
   }
-};
+}
 
-loadFunctions(funcs);
-console.log("index loaded");
+for (const functionName in functions) {
+  if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === functionName) {
+    exports[functionName] = require(functions[functionName]);
+  }
+}
